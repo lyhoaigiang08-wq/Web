@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pass The Link To Make Money</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --accent: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Navigation */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--card-bg);
+            padding: 12px 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .avatar-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .avatar-img {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            object-fit: cover;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Dropdown Menus */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 55px;
+            background-color: var(--card-bg);
+            border: 1px solid #334155;
+            border-radius: 8px;
+            width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            z-index: 101;
+            overflow: hidden;
+        }
+
+        .dropdown-menu.active {
+            display: block;
+        }
+
+        .dropdown-menu.left { left: 0; }
+        .dropdown-menu.right { right: 0; }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #334155;
+            color: var(--primary);
+        }
+
+        /* Auth Container */
+        .auth-container {
+            max-width: 450px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 90%;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #334155;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-sub);
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            cursor: pointer;
+            color: var(--text-sub);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            margin-top: 8px;
+            color: var(--primary);
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        /* Main App Views */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+            flex: 1;
+            width: 100%;
+        }
+
+        /* Banner */
+        .banner {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .banner h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .stat-card.green { border-left-color: var(--accent); }
+        .stat-card.red { border-left-color: var(--danger); }
+
+        .stat-card h3 {
+            font-size: 13px;
+            color: var(--text-sub);
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Chat Room */
+        .chat-section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chat-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-box {
+            height: 250px;
+            background-color: #0f172a;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-msg {
+            background-color: #1e293b;
+            padding: 8px 12px;
+            border-radius: 6px;
+            max-width: 80%;
+            width: fit-content;
+        }
+
+        .chat-msg .sender {
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* CSKH Support Footer */
+        .footer-support {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-top: 1px solid #334155;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        .cskh-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .cskh-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* Table Design */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #0f172a;
+            color: var(--text-sub);
+        }
+
+        /* Modal / Views */
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        .hide { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR (Chỉ hiện khi đã đăng nhập) -->
+    <nav class="navbar hide" id="mainNavbar">
+        <!-- Frame Trái: Avatar -->
+        <div class="avatar-container" onclick="toggleDropdown('avatarMenu')">
+            <img src="https://ui-avatars.com/api/?name=User&background=4f46e5&color=fff" id="userAvatar" class="avatar-img" alt="Avatar">
+            <div class="dropdown-menu left" id="avatarMenu">
+                <div class="dropdown-item" onclick="showView('accountView')"><i class="fas fa-user"></i> Thông tin tài khoản</div>
+                <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</div>
+            </div>
+        </div>
+
+        <div style="font-weight: bold; color: var(--accent);" id="navUsername">Welcome</div>
+
+        <!-- Frame Phải: 3 Gạch -->
+        <div style="position: relative;">
+            <button class="menu-btn" onclick="toggleDropdown('mainMenu')"><i class="fas fa-bars"></i></button>
+            <div class="dropdown-menu right" id="mainMenu">
+                <div class="dropdown-item" onclick="showView('homeView')"><i class="fas fa-home"></i> Trang chủ</div>
+                <div class="dropdown-item" onclick="showView('accountView')"><i class="fas fa-user-cog"></i> Thông tin tài khoản</div>
+                <div class="dropdown-item" onclick="showView('withdrawView')"><i class="fas fa-wallet"></i> Rút tiền</div>
+                <div class="dropdown-item" onclick="showView('referralView')"><i class="fas fa-user-plus"></i> Giới thiệu bạn bè</div>
+                <div class="dropdown-item hide" id="adminMenuBtn" onclick="showView('adminView')"><i class="fas fa-user-shield"></i> Trang Admin</div>
+                <div class="dropdown-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- TRANG DANG KY / DANG NHAP -->
+    <div id="authSection" class="auth-container">
+        <div class="auth-header">
+            <h2>HỆ THỐNG VƯỢT LINK</h2>
+            <p style="color: var(--text-sub); font-size: 14px; margin-top: 4px;">Kiếm tiền online đơn giản & hiệu quả</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="tab-btn active" onclick="switchAuthTab('login')">Đăng nhập</button>
+            <button class="tab-btn" onclick="switchAuthTab('register')">Đăng ký</button>
+        </div>
+
+        <!-- Form Đăng nhập -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>Tên đăng nhập</label>
+                <input type="text" id="loginUsername" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="loginPassword" class="form-control" required>
+                <i class="fas fa-eye toggle-password" onclick="togglePasswordVisibility('loginPassword', this)"></i>
+                <a href="#" class="forgot-link" onclick="handleForgotPass()">Quên mật khẩu?</a>
+            </div>
+            <button type="submit" class="btn">Đăng Nhập</button>
+        </form>
+
+        <!-- Form Đăng ký -->
+        <form id="registerForm" class="hide" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label>Tên tài khoản</label>
+                <input type="text" id="regUsername" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Họ và tên</label>
+                <input type="text" id="regFullName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Xác nhận Số điện thoại</label>
+                <input type="tel" id="regPhone" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="regPassword" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Xác nhận mật khẩu</label>
+                <input type="password" id="regConfirmPassword" class="form-control" required>
+            </div>
+            <button type="submit" class="btn">Đăng Ký Tài Khoản</button>
+        </form>
+    </div>
+
+    <!-- MAIN APP CONTENT (Sau khi đăng nhập) -->
+    <div id="appSection" class="container hide">
+        
+        <!-- TRANG CHỦ -->
+        <div id="homeView" class="view-section active">
+            <!-- Banner -->
+            <div class="banner">
+                <h1>Pass the link to make money</h1>
+                <p>Chia sẻ liên kết - Tối ưu hóa thu nhập thụ động hàng ngày</p>
+            </div>
+
+            <!-- Bảng Thống Kê Vượt Link -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Số link còn lại</h3>
+                    <div class="value" id="userRemainingLinks">0</div>
+                </div>
+                <div class="stat-card green">
+                    <h3>Thu nhập tích lũy</h3>
+                    <div class="value" id="userEarnings">0 VNĐ</div>
+                </div>
+                <div class="stat-card red">
+                    <h3>Tổng số link đã vượt</h3>
+                    <div class="value" id="userPassedLinks">0</div>
+                </div>
+            </div>
+
+            <!-- Khung Vượt Link Trực Tiếp -->
+            <div class="chat-section" style="margin-bottom: 25px;">
+                <div class="chat-title"><i class="fas fa-link"></i> Vượt link kiếm tiền ngay</div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <select id="availableLinkSelect" class="form-control" style="flex: 2;"></select>
+                    <button class="btn" onclick="executePassLink()" style="flex: 1;">Bắt đầu vượt link</button>
+                </div>
+            </div>
+
+            <!-- Khung Chat Tổng -->
+            <div class="chat-section">
+                <div class="chat-title"><i class="fas fa-comments"></i> Khung Chat Cộng Đồng</div>
+                <div class="chat-box" id="chatBox"></div>
+                <div class="chat-input-group">
+                    <input type="text" id="chatInput" class="form-control" placeholder="Nhập tin nhắn trò chuyện...">
+                    <button class="btn" style="width: 100px;" onclick="sendChatMessage()">Gửi</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANG THÔNG TIN TÀI KHOẢN -->
+        <div id="accountView" class="view-section">
+            <div class="chat-section">
+                <div class="chat-title"><i class="fas fa-id-card"></i> Thông Tin Tài Khoản</div>
+                <div style="margin-top: 15px;" id="accountDetailContainer"></div>
+            </div>
+        </div>
+
+        <!-- TRANG RÚT TIỀN -->
+        <div id="withdrawView" class="view-section">
+            <div class="chat-section">
+                <div class="chat-title"><i class="fas fa-wallet"></i> Yêu Cầu Rút Tiền</div>
+                <p>Số dư hiện tại: <b style="color: var(--accent);" id="withdrawBalance">0 VNĐ</b></p>
+                <form style="margin-top: 15px;" onsubmit="handleWithdraw(event)">
+                    <div class="form-group">
+                        <label>Tên Ngân Hàng / Ví Điện Tử</label>
+                        <input type="text" class="form-control" placeholder="Ví dụ: MB Bank, Momo" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Số tài khoản / Số điện thoại nhận tiền</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Số tiền rút (Tối thiểu 50,000 VNĐ)</label>
+                        <input type="number" class="form-control" min="50000" required>
+                    </div>
+                    <button type="submit" class="btn">Gửi Yêu Cầu Rút Tiền</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TRANG GIỚI THIỆU BẠN BÈ -->
+        <div id="referralView" class="view-section">
+            <div class="chat-section">
+                <div class="chat-title"><i class="fas fa-users"></i> Giới Thiệu Bạn Bè Kiếm Hoa Hồng</div>
+                <p>Mã giới thiệu của bạn: <b style="color: var(--primary);" id="refCode">REF123</b></p>
+                <div style="margin-top: 15px;">
+                    <label>Liên kết giới thiệu:</label>
+                    <input type="text" class="form-control" id="refLink" readonly>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANG QUẢN TRỊ ADMIN (Chỉ dành riêng cho Admin) -->
+        <div id="adminView" class="view-section">
+            <h2 style="margin-bottom: 20px; color: var(--accent);"><i class="fas fa-user-shield"></i> Trang Quản Trị Hệ Thống (Admin)</h2>
+            
+            <!-- Bảng 1: Thêm Link & Thống Kê Link -->
+            <div class="chat-section">
+                <div class="chat-title"><i class="fas fa-plus-circle"></i> Thêm Link Mới & Tổng Quan Giá Trị</div>
+                <form onsubmit="adminAddLink(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                    <input type="text" id="adminLinkUrl" placeholder="URL Link (https://...)" class="form-control" required>
+                    <input type="number" id="adminLinkReward" placeholder="Số tiền thưởng/lượt (VNĐ)" class="form-control" required>
+                    <input type="number" id="adminLinkLimit" placeholder="Số lượt vượt cho phép" class="form-control" required>
+                    <button type="submit" class="btn">Thêm Link</button>
+                </form>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>URL Link</th>
+                                <th>Thưởng / Lượt</th>
+                                <th>Lượt còn lại</th>
+                                <th>Tổng giá trị link</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminLinksTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bảng 2: Thống Kê Đăng Ký Tài Khoản -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Tổng tài khoản đã đăng ký</h3>
+                    <div class="value" id="adminTotalUsers">0</div>
+                </div>
+            </div>
+
+            <!-- Bảng 3: Thống Kê Lượt Vượt Link Theo Ngày - Tuần - Tháng -->
+            <div class="chat-section">
+                <div class="chat-title"><i class="fas fa-chart-line"></i> Thống Kê Số Link Đã Vượt</div>
+                <div class="stats-grid">
+                    <div class="stat-card green">
+                        <h3>Hôm Nay</h3>
+                        <div class="value" id="passedToday">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Tuần Này</h3>
+                        <div class="value" id="passedWeek">0</div>
+                    </div>
+                    <div class="stat-card red">
+                        <h3>Tháng Này</h3>
+                        <div class="value" id="passedMonth">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng 4: Bảng Xếp Hạng Cộng Nhiều Tiền Nhất -->
+            <div class="chat-section">
+                <div class="chat-title"><i class="fas fa-trophy"></i> Top Tài Khoản Vượt Link Kiếm Nhiều Tiền Nhất</div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tên Tài Khoản</th>
+                                <th>Họ và Tên</th>
+                                <th>Số Điện Thoại</th>
+                                <th>Tổng Tiền Kiếm Được</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTopEarnersTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Bảng 5: Tạo Tài Khoản Trực Tiếp Cho Người Vượt Link -->
+            <div class="chat-section">
+                <div class="chat-title"><i class="fas fa-user-plus"></i> Bảng Tạo Tài Khoản Thành Viên</div>
+                <form onsubmit="adminCreateUser(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                    <input type="text" id="admRegUser" placeholder="Tên tài khoản" class="form-control" required>
+                    <input type="text" id="admRegName" placeholder="Họ và tên" class="form-control" required>
+                    <input type="tel" id="admRegPhone" placeholder="Số điện thoại" class="form-control" required>
+                    <input type="password" id="admRegPass" placeholder="Mật khẩu" class="form-control" required>
+                    <button type="submit" class="btn" style="grid-column: 1 / -1;">Tạo Tài Khoản Mới</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LIÊN HỆ HỖ TRỢ CSKH (Chân trang) -->
+    <div class="footer-support hide" id="mainFooter">
+        <div class="cskh-box">
+            <div class="cskh-icon">
+                <i class="fas fa-headset"></i>
+            </div>
+            <div style="text-align: left;">
+                <h4 style="color: var(--text-main);">Liên Hệ Hỗ Trợ Khách Hàng (CSKH 24/7)</h4>
+                <p style="color: var(--text-sub); font-size: 13px;">Telegram: @cskh_vuotlink | Zalo/Hotline: 0988.xxx.xxx</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT TƯƠNG TÁC API/BACKEND -->
+    <script>
+        const API_URL = '/api';
+        let currentUser = null;
+
+        // Toggle Password
+        function togglePasswordVisibility(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // Toggle Auth Tabs
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if (tab === 'login') {
+                document.querySelectorAll('.tab-btn')[0].classList.add('active');
+                document.getElementById('loginForm').classList.remove('hide');
+                document.getElementById('registerForm').classList.add('hide');
+            } else {
+                document.querySelectorAll('.tab-btn')[1].classList.add('active');
+                document.getElementById('loginForm').classList.add('hide');
+                document.getElementById('registerForm').classList.remove('hide');
+            }
+        }
+
+        // Dropdown Toggle
+        function toggleDropdown(id) {
+            const menu = document.getElementById(id);
+            const isActive = menu.classList.contains('active');
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+            if (!isActive) menu.classList.add('active');
+        }
+
+        // Navigation Views
+        function showView(viewId) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.querySelectorAll('.dropdown-menu').forEach(m => m.classList.remove('active'));
+
+            if (viewId === 'adminView') loadAdminData();
+            if (viewId === 'homeView') loadHomeData();
+            if (viewId === 'accountView') renderAccountInfo();
+        }
+
+        // Auth Operations
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const res = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    currentUser = data.user;
+                    initApp();
+                } else {
+                    alert(data.message || 'Đăng nhập thất bại');
+                }
+            } catch (err) {
+                alert('Không thể kết nối đến máy chủ Backend SQL!');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value;
+            const fullName = document.getElementById('regFullName').value;
+            const phone = document.getElementById('regPhone').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                return alert('Mật khẩu xác nhận không khớp!');
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, fullName, phone, password })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert('Đăng ký thành công! Hãy đăng nhập.');
+                    switchAuthTab('login');
+                } else {
+                    alert(data.message);
+                }
+            } catch (err) {
+                alert('Không thể kết nối máy chủ!');
+            }
+        }
+
+        function handleForgotPass() {
+            alert('Vui lòng liên hệ bộ phận CSKH bên dưới để khôi phục mật khẩu.');
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('authSection').classList.remove('hide');
+            document.getElementById('appSection').classList.add('hide');
+            document.getElementById('mainNavbar').classList.add('hide');
+            document.getElementById('mainFooter').classList.add('hide');
+        }
+
+        function initApp() {
+            document.getElementById('authSection').classList.add('hide');
+            document.getElementById('appSection').classList.remove('hide');
+            document.getElementById('mainNavbar').classList.remove('hide');
+            document.getElementById('mainFooter').classList.remove('hide');
+
+            document.getElementById('navUsername').innerText = currentUser.fullName;
+            document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.fullName)}&background=4f46e5&color=fff`;
+            document.getElementById('refCode').innerText = `REF_${currentUser.username.toUpperCase()}`;
+            document.getElementById('refLink').value = `${window.location.origin}?ref=${currentUser.username}`;
+
+            if (currentUser.isAdmin) {
+                document.getElementById('adminMenuBtn').classList.remove('hide');
+            } else {
+                document.getElementById('adminMenuBtn').classList.add('hide');
+            }
+
+            showView('homeView');
+            loadChatMessages();
+        }
+
+        // Load Trang Chủ
+        async function loadHomeData() {
+            const res = await fetch(`${API_URL}/user/stats/${currentUser.id}`);
+            const data = await res.json();
+
+            document.getElementById('userRemainingLinks').innerText = data.remainingLinks;
+            document.getElementById('userEarnings').innerText = `${data.earnings.toLocaleString()} VNĐ`;
+            document.getElementById('userPassedLinks').innerText = data.passedLinks;
+            document.getElementById('withdrawBalance').innerText = `${data.earnings.toLocaleString()} VNĐ`;
+
+            // Render Links Select
+            const linksRes = await fetch(`${API_URL}/links`);
+            const links = await linksRes.json();
+            const select = document.getElementById('availableLinkSelect');
+            select.innerHTML = links.map(l => `<option value="${l.id}">${l.url} - Thưởng: ${l.reward.toLocaleString()} VNĐ</option>`).join('');
+        }
+
+        // Thực hiện vượt link
+        async function executePassLink() {
+            const linkId = document.getElementById('availableLinkSelect').value;
+            if (!linkId) return alert('Không có link khả dụng!');
+
+            const res = await fetch(`${API_URL}/pass-link`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: currentUser.id, linkId })
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+                alert(`Vượt link thành công! Bạn được cộng ${data.reward.toLocaleString()} VNĐ`);
+                loadHomeData();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        // Chat Room Logic
+        async function loadChatMessages() {
+            const res = await fetch(`${API_URL}/chat`);
+            const messages = await res.json();
+            const box = document.getElementById('chatBox');
+            box.innerHTML = messages.map(m => `
+                <div class="chat-msg">
+                    <div class="sender">${m.sender}</div>
+                    <div>${m.text}</div>
+                </div>
+            `).join('');
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            if (!input.value.trim()) return;
+
+            await fetch(`${API_URL}/chat`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sender: currentUser.fullName, text: input.value })
+            });
+
+            input.value = '';
+            loadChatMessages();
+        }
+
+        function renderAccountInfo() {
+            document.getElementById('accountDetailContainer').innerHTML = `
+                <p style="margin-bottom: 8px;"><b>Tên tài khoản:</b> ${currentUser.username}</p>
+                <p style="margin-bottom: 8px;"><b>Họ và tên:</b> ${currentUser.fullName}</p>
+                <p style="margin-bottom: 8px;"><b>Số điện thoại:</b> ${currentUser.phone}</p>
+                <p><b>Quyền hạn:</b> ${currentUser.isAdmin ? '<span style="color:var(--accent);">Quản trị viên (Admin)</span>' : 'Thành viên'}</p>
+            `;
+        }
+
+        function handleWithdraw(e) {
+            e.preventDefault();
+            alert('Gửi yêu cầu rút tiền thành công! Admin sẽ duyệt trong 24h.');
+        }
+
+        // ADMIN FUNCTIONS
+        async function loadAdminData() {
+            const res = await fetch(`${API_URL}/admin/stats`);
+            const data = await res.json();
+
+            // Render Links
+            document.getElementById('adminLinksTable').innerHTML = data.links.map(l => `
+                <tr>
+                    <td>${l.url}</td>
+                    <td>${l.reward.toLocaleString()} VNĐ</td>
+                    <td>${l.remaining}</td>
+                    <td>${(l.reward * l.remaining).toLocaleString()} VNĐ</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('adminTotalUsers').innerText = data.totalUsers;
+            document.getElementById('passedToday').innerText = data.passedToday;
+            document.getElementById('passedWeek').innerText = data.passedWeek;
+            document.getElementById('passedMonth').innerText = data.passedMonth;
+
+            // Render Top Earners
+            document.getElementById('adminTopEarnersTable').innerHTML = data.topEarners.map(u => `
+                <tr>
+                    <td>${u.username}</td>
+                    <td>${u.fullName}</td>
+                    <td>${u.phone}</td>
+                    <td style="color:var(--accent); font-weight:bold;">${u.earnings.toLocaleString()} VNĐ</td>
+                </tr>
+            `).join('');
+        }
+
+        async function adminAddLink(e) {
+            e.preventDefault();
+            const url = document.getElementById('adminLinkUrl').value;
+            const reward = Number(document.getElementById('adminLinkReward').value);
+            const limit = Number(document.getElementById('adminLinkLimit').value);
+
+            await fetch(`${API_URL}/admin/add-link`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url, reward, limit })
+            });
+
+            alert('Thêm link thành công!');
+            loadAdminData();
+        }
+
+        async function adminCreateUser(e) {
+            e.preventDefault();
+            const username = document.getElementById('admRegUser').value;
+            const fullName = document.getElementById('admRegName').value;
+            const phone = document.getElementById('admRegPhone').value;
+            const password = document.getElementById('admRegPass').value;
+
+            const res = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, fullName, phone, password })
+            });
+
+            if (res.ok) {
+                alert('Tạo tài khoản thành công!');
+                loadAdminData();
+            } else {
+                const data = await res.json();
+                alert(data.message);
+            }
+        }
+    </script>
+</body>
+</html>
